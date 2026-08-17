@@ -47,7 +47,7 @@ export PATH="$tmp_dir/bin:$PATH"
 export FAKE_AGENTS_FIXTURE="$tmp_dir/agents.json"
 export FAKE_CAPTURE="$tmp_dir/captured-prompt"
 
-printf '%s' 'hello' | "$relay" >"$tmp_dir/newest-result"
+printf '%s' 'hello' | bash "$relay" >"$tmp_dir/newest-result"
 if python3 - "$tmp_dir/newest-result" <<'PY'
 import json, sys
 result = json.load(open(sys.argv[1]))
@@ -61,7 +61,7 @@ else
   fail 'newest interactive session is selected when --name is absent'
 fi
 
-printf '%s' 'hello' | "$relay" --name does-not-exist >"$tmp_dir/missing-result"
+printf '%s' 'hello' | bash "$relay" --name does-not-exist >"$tmp_dir/missing-result"
 missing_status=$?
 if [ "$missing_status" -eq 3 ]; then
   pass 'unknown explicit --name exits 3'
@@ -73,7 +73,7 @@ cat >"$tmp_dir/expected-message" <<'MESSAGE'
 Does ? survive * with 'single quotes' and "double quotes"?
 This second line must also survive byte-identical.
 MESSAGE
-"$relay" <"$tmp_dir/expected-message" >"$tmp_dir/roundtrip-result"
+bash "$relay" <"$tmp_dir/expected-message" >"$tmp_dir/roundtrip-result"
 if python3 - "$tmp_dir/captured-prompt" "$tmp_dir/expected-message" <<'PY'
 import re, sys
 prompt = open(sys.argv[1], "rb").read()
@@ -91,7 +91,7 @@ else
 fi
 
 export FAKE_EMIT_SECRET=1
-printf '%s' 'filter test' | "$relay" >"$tmp_dir/secret-result"
+printf '%s' 'filter test' | bash "$relay" >"$tmp_dir/secret-result"
 if ! grep -q 'sk-ant-oat01-EXAMPLE' "$tmp_dir/secret-result" && grep -q '\[REDACTED\]' "$tmp_dir/secret-result"; then
   pass 'secret-shaped strings are filtered from relayed output'
 else

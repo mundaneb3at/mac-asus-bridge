@@ -61,7 +61,7 @@ printf '%s\n' 'Reply text' > ~/School/asus/outbox/reply-$(date +%s).txt
 Mac to a fresh Windows Claude session:
 
 ```bash
-printf '%s\n' 'Inspect the Windows workspace and answer this question.' | ./mac/ask-asus.sh
+printf '%s\n' 'Inspect the Windows workspace and answer this question.' | bash mac/ask-asus.sh
 ```
 
 `ask-asus.sh` accepts `--timeout <seconds>` (default `300`) and `--keep`. It
