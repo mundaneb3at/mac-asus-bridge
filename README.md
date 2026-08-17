@@ -155,12 +155,19 @@ bash tests/test-relay.sh      # Mac-side relay-send.sh, pure bash + python3
 bash tests/test-ask-asus.sh   # Windows return leg, needs a PowerShell host
 ```
 
-`test-relay.sh` stubs the `claude` CLI directly and is fully portable.
+`test-relay.sh` stubs the `claude` CLI directly and is fully portable — CI
+runs it for real on both Ubuntu and macOS.
+
 `test-ask-asus.sh` exercises the *real* `Answer-Ask.ps1` runner against a
-compiled C# stub (`tests/claude-stub.cs`) standing in for `claude.exe`, so it
-needs a PowerShell host (`powershell.exe` on Windows, or `pwsh` where
-installed) to compile and run that stub — if neither is present, it prints
-`SKIP` and exits `0` rather than failing.
+compiled C# console-app stub (`tests/claude-stub.cs`) standing in for
+`claude.exe`. It picks `powershell.exe` (Windows) or `pwsh` (installed
+elsewhere) if either is present, and prints `SKIP` and exits `0` if neither
+is. Measured on GitHub's `ubuntu-latest` and `macos-latest` runners: `pwsh`
+*is* preinstalled, but its `Add-Type -OutputType ConsoleApplication` cannot
+produce a native executable outside Windows, so the compile step fails and
+this test genuinely SKIPs there — it isn't a CI shortcut, it's what actually
+happens. The return leg it covers only runs on a live Windows box in
+practice, so run it there directly.
 
 ## Size
 

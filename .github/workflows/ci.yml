@@ -17,5 +17,9 @@ jobs:
       - name: Mac-side relay tests (relay-send.sh)
         run: bash tests/test-relay.sh
 
+      # Exercises the real Answer-Ask.ps1 via pwsh. On ubuntu-latest/macos-latest
+      # this reliably prints SKIP: pwsh is present but Add-Type -OutputType
+      # ConsoleApplication can't produce a native exe outside Windows. That's a
+      # real platform limit, not a broken test — see README's Tests section.
       - name: Windows return-leg tests (ask-asus.sh + Answer-Ask.ps1)
         run: bash tests/test-ask-asus.sh
